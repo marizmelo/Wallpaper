@@ -1,15 +1,47 @@
 {
-  "name": "holographic-earth",
-  "version": "1.0.0",
+  "name": "wallpaper",
+  "version": "0.0.1",
   "description": "Holographic parallax Earth with webcam head tracking",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder --mac --win --linux",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.marizmelo.wallpaper",
+    "productName": "Wallpaper",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "src/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dmg",
+      "icon": "assets/icon.icns",
+      "extendInfo": {
+        "NSCameraUsageDescription": "Wallpaper uses the camera for head tracking to create a holographic parallax effect.",
+        "NSCameraUseContinuityCameraDeviceType": true
+      }
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
   },
   "dependencies": {
     "three": "^0.170.0"
   },
   "devDependencies": {
-    "electron": "^34.0.0"
+    "electron": "^34.0.0",
+    "electron-builder": "^25.1.8"
   }
 }
