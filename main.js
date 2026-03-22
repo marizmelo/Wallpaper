@@ -1,9 +1,15 @@
 const { app, BrowserWindow, ipcMain, session, screen } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 let windows = [];
 let readyCount = 0;
 let totalWindows = 0;
+
+// Use bundled dist-web/ if it exists (packaged build), otherwise dev index.html
+const distIndex = path.join(__dirname, 'dist-web', 'index.html');
+const devIndex = path.join(__dirname, 'index.html');
+const indexFile = fs.existsSync(distIndex) ? distIndex : devIndex;
 
 function createWindow() {
   session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
@@ -51,7 +57,7 @@ function createWindow() {
       }
     });
 
-    win.loadFile('index.html', { hash: mode });
+    win.loadFile(indexFile, { hash: mode });
 
     win.webContents.on('did-finish-load', () => {
       win.setBounds({ x, y, width, height });
