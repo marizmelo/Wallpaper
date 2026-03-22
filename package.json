@@ -1,0 +1,15 @@
+{
+  "name": "holographic-earth",
+  "version": "1.0.0",
+  "description": "Holographic parallax Earth with webcam head tracking",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "electron": "^34.0.0"
+  }
+}

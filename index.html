@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holographic Earth</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./node_modules/three/build/three.module.js",
+        "three/addons/": "./node_modules/three/examples/jsm/"
+      }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='), none !important; }
+    body { overflow: hidden; background: #000; }
+    canvas { display: block; }
+    #webcam { position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+    #loading {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: #000; color: #fff; font-family: -apple-system, sans-serif;
+      font-size: 18px; z-index: 100; transition: opacity 0.5s;
+    }
+    #loading.hidden { opacity: 0; pointer-events: none; }
+
+    /* Liquid glass clock - bottom right */
+    #clock-overlay {
+      position: fixed;
+      bottom: 48px;
+      right: 48px;
+      z-index: 50;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    #clock-time {
+      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      font-size: 72px;
+      font-weight: 200;
+      letter-spacing: 2px;
+      line-height: 1;
+      /* Liquid glass on each character via SVG filter + CSS */
+      color: transparent;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.95) 0%,
+          rgba(255, 255, 255, 0.5) 50%,
+          rgba(255, 255, 255, 0.8) 100%
+        );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+    }
+    #clock-time .digit {
+      display: inline-block;
+      position: relative;
+      color: transparent;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.98) 0%,
+          rgba(200, 220, 255, 0.55) 45%,
+          rgba(255, 255, 255, 0.85) 100%
+        );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+    }
+    #clock-time .colon {
+      display: inline-block;
+      color: transparent;
+      background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 0 2px;
+    }
+    #clock-date, #clock-location {
+      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      color: transparent;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.75) 0%,
+          rgba(200, 220, 255, 0.45) 100%
+        );
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.3));
+      text-align: right;
+    }
+    #clock-location {
+      font-size: 13px;
+      letter-spacing: 1px;
+      min-height: 18px;
+    }
+
+    .spinner {
+      width: 40px; height: 40px; border: 3px solid #333;
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin-right: 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="loading"><div class="spinner"></div>Loading...</div>
+
+  <div id="clock-overlay">
+    <div id="clock-time"></div>
+    <div id="clock-date"></div>
+    <div id="clock-location"></div>
+  </div>
+
+  <video id="webcam" autoplay playsinline></video>
+
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core@4.22.0/dist/tf-core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl@4.22.0/dist/tf-backend-webgl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection@1.0.5/dist/face-landmarks-detection.min.js"></script>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>
